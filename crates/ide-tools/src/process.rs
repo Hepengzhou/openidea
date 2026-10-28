@@ -150,19 +150,29 @@ fn strip_ansi(s: &str) -> String {
 /// mainstream Linux), so the IDE carries no TLS stack of its own.
 pub struct Http {
     curl: std::path::PathBuf,
+    https_only: bool,
 }
 
 impl Http {
     pub fn new(search_path: &std::ffi::OsStr) -> IdeResult<Self> {
         let curl = which::which_in("curl", Some(search_path), ".")
             .map_err(|_| IdeError::unavailable("`curl` is required to download tools"))?;
-        Ok(Self { curl })
+        Ok(Self { curl, https_only: false })
+    }
+
+    /// Refuses every protocol but HTTPS, redirects included.
+    pub fn https_only(mut self) -> Self {
+        self.https_only = true;
+        self
     }
 
     fn base(&self, url: &str) -> Command {
         let mut cmd = Command::new(&self.curl);
         ide_core::process::prepare(&mut cmd);
         cmd.args(["-fsSL", "--retry", "2", "--connect-timeout", "20", "-A", "openidea"]);
+        if self.https_only {
+            cmd.args(["--proto", "=https", "--proto-redir", "=https"]);
+        }
         if url.starts_with("https://api.github.com/")
             && let Ok(token) = std::env::var("GITHUB_TOKEN").or_else(|_| std::env::var("GH_TOKEN"))
             && !token.is_empty()
@@ -174,14 +184,24 @@ impl Http {
 
     /// GETs `url` as text.
     pub fn get_text(&self, url: &str, cancel: &CancellationToken) -> IdeResult<String> {
+        self.get_text_limited(url, None, cancel)
+    }
+
+    /// GETs `url` as text, failing when the response is larger than `max_bytes`.
+    pub fn get_text_limited(&self, url: &str, max_bytes: Option<u64>, cancel: &CancellationToken) -> IdeResult<String> {
         let mut cmd = self.base(url);
+        if let Some(max) = max_bytes {
+            cmd.arg("--max-filesize").arg(max.to_string());
+        }
         cmd.arg(url).stdin(Stdio::null()).stdout(Stdio::piped()).stderr(Stdio::piped());
         let mut child = cmd.spawn().map_err(|e| IdeError::unavailable(format!("cannot run curl: {e}")))?;
-        let mut stdout = child.stdout.take().expect("piped");
+        let stdout = child.stdout.take().expect("piped");
         let mut stderr = child.stderr.take().expect("piped");
+        // Past the limit the pipe closes, which stops curl.
+        let limit = max_bytes.map_or(u64::MAX, |m| m + 1);
         let out_t = std::thread::spawn(move || {
             let mut s = Vec::new();
-            let _ = stdout.read_to_end(&mut s);
+            let _ = stdout.take(limit).read_to_end(&mut s);
             s
         });
         let status = loop {
@@ -195,6 +215,11 @@ impl Http {
             }
         };
         let body = out_t.join().unwrap_or_default();
+        if let Some(max) = max_bytes
+            && body.len() as u64 > max
+        {
+            return Err(IdeError::new(ErrorKind::Io, format!("{url}: response is larger than {max} bytes")));
+        }
         if !status.success() {
             let mut err = String::new();
             let _ = stderr.read_to_string(&mut err);
