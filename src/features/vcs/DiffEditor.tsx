@@ -24,7 +24,7 @@ import { tx } from "@/platform/i18n";
 import { IconButton, Select, Spinner, T } from "@/ui";
 import { editorService, type EditorInput } from "@/workbench/contributions";
 import { languageFor, viewerBase } from "./cm";
-import { applyChunk, arrowControls, hoverRevert } from "./diffControls";
+import { applyChunk, arrowControls, chunkAt, hoverRevert } from "./diffControls";
 import {
   HIGHLIGHT_OPTIONS,
   IGNORE_OPTIONS,
@@ -586,10 +586,26 @@ export function DiffEditor({ input }: { input: EditorInput }) {
     e.stopPropagation();
   };
 
-  const nav = useRef<DiffNavigator>({ next: () => step(1), prev: () => step(-1), jumpToSource });
+  /** ⌃⌘→ / ⌃⌘←: the change at the caret applied toward the other, editable side. */
+  const applyChange = (source: "a" | "b") => {
+    const views = viewsRef.current;
+    const merge = views?.merge;
+    if (!merge || !views.a || !(source === "a" ? editableB : editableA)) return false;
+    const side = focusedSide.current;
+    const view = side === "a" ? views.a : views.b;
+    const index = chunkAt(merge.chunks, side, view.state.selection.main.head, view.state.doc.length);
+    if (index < 0) return false;
+    applyChunk(merge, index, source);
+    return true;
+  };
+  const file = (dir: 1 | -1) => {
+    const neighbour = chainNeighbour(data, dir);
+    if (neighbour) void openDiff(neighbour, { preview: true });
+  };
+  const nav = useRef<DiffNavigator>({ next: () => step(1), prev: () => step(-1), jumpToSource, applyChange, file });
   useEffect(() => {
-    nav.current = { next: () => step(1), prev: () => step(-1), jumpToSource };
-  }, [step, jumpToSource]);
+    nav.current = { next: () => step(1), prev: () => step(-1), jumpToSource, applyChange, file };
+  });
 
   useEffect(
     () => () => {

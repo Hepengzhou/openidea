@@ -324,6 +324,10 @@ export const vscodeMacos: Record<string, string[]> = {
   "markdown.previewOnly": ["Meta+Shift+V"],
   // Diff editor (VS Code: workbench.action.compareEditor.nextChange / previousChange)
   "diff.nextDifference": ["F7"],
+  "diff.applyLeftSide": [],
+  "diff.applyRightSide": [],
+  "diff.nextFile": [],
+  "diff.prevFile": [],
   "diff.prevDifference": ["Shift+F7"],
   "diff.jumpToSource": [],
   // HTTP Client / Database console: run the request or statement at the caret.

@@ -316,6 +316,10 @@ export const intellijMacos: Record<string, string[]> = {
   "diff.nextDifference": ["F7"],
   "diff.prevDifference": ["Shift+F7"],
   "diff.jumpToSource": ["F4"],
+  "diff.applyLeftSide": ["Ctrl+Meta+Right"],
+  "diff.applyRightSide": ["Ctrl+Meta+Left"],
+  "diff.nextFile": ["Ctrl+Shift+Right"],
+  "diff.prevFile": ["Ctrl+Shift+Left"],
   // After Show Diff: ⌘D is Compare With… in the project view.
   "project.compareWith": ["Meta+D"],
   // Editing extras, image viewer (keyWhen: image focused) and Markdown editor layouts

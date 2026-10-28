@@ -4599,5 +4599,11 @@
   "Add Mouse Shortcut": "添加鼠标快捷键",
   "Click here with a mouse side button, holding any modifiers": "按住任意修饰键，用鼠标侧键点击此处",
   "Mouse shortcut": "鼠标快捷键",
-  "Mouse Shortcut: {action}": "鼠标快捷键：{action}"
+  "Mouse Shortcut: {action}": "鼠标快捷键：{action}",
+  "Accept Left Side": "接受左侧",
+  "Accept Right Side": "接受右侧",
+  "Copies the change at the caret from the left side to the right one": "将光标处的变更从左侧复制到右侧",
+  "Copies the change at the caret from the right side to the left one": "将光标处的变更从右侧复制到左侧",
+  "Compare Next File": "比较下一个文件",
+  "Compare Previous File": "比较上一个文件"
 }
