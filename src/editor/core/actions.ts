@@ -782,6 +782,8 @@ export function registerEditorActions(): () => void {
       category: "Navigate",
       keywords: ["breadcrumbs"],
       when: "projectOpen",
+      // ⌘↑ / ⌘↓ inside a popup (Search Everywhere's previous / next group) stay with it.
+      keyWhen: "!popupOpen",
       run: () => {
         if (activeSlot()) return openNavBarPopup();
         // No editor: the status bar breadcrumbs (StatusItems › Breadcrumbs) take focus.
