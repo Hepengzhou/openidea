@@ -276,6 +276,7 @@ export const intellijWindows: Record<string, string[]> = {
   "debug.jumpToSource": ["F4"],
   "debug.evaluate": ["Alt+F8"],
   "debug.quickEvaluate": ["Ctrl+Alt+F8"],
+  "debug.browseConsoleHistory": ["Ctrl+Alt+E"],
 
   // VCS
   "vcs.operations": ["Alt+`"],
@@ -319,6 +320,7 @@ export const intellijWindows: Record<string, string[]> = {
   "diff.applyRightSide": ["Ctrl+Alt+A"],
   "diff.nextFile": ["Alt+Shift+Right"],
   "diff.prevFile": ["Alt+Shift+Left"],
+  "diff.showSettings": ["Ctrl+Shift+D"],
   // After Show Diff: Ctrl+D is Compare With… in the project view.
   "project.compareWith": ["Ctrl+D"],
   // Editing extras, image viewer (keyWhen: image focused) and Markdown editor layouts

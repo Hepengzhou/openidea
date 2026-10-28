@@ -4607,5 +4607,11 @@
   "Compare Next File": "比较下一个文件",
   "Compare Previous File": "比较上一个文件",
   "Context Info": "上下文信息",
-  "No context information here": "此处没有上下文信息"
+  "No context information here": "此处没有上下文信息",
+  "Diff Settings": "差异设置",
+  "Viewer": "查看器",
+  "Ignore Whitespace": "忽略空白",
+  "Browse Console History": "浏览控制台历史",
+  "Focus the debug console input first": "请先聚焦调试控制台输入框",
+  "No history": "无历史记录"
 }

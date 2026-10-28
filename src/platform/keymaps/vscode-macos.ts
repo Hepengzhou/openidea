@@ -54,6 +54,7 @@ export const vscodeMacos: Record<string, string[]> = {
   "project.copyElement": [],
   "run.chooseDebugConfig": [],
   "debug.quickEvaluate": [],
+  "debug.browseConsoleHistory": [],
   "editor.nextSplitter": [],
   "editor.prevSplitter": [],
   "toolwindow.resizeLeft": [],
@@ -329,6 +330,7 @@ export const vscodeMacos: Record<string, string[]> = {
   "diff.applyRightSide": [],
   "diff.nextFile": [],
   "diff.prevFile": [],
+  "diff.showSettings": [],
   "diff.prevDifference": ["Shift+F7"],
   "diff.jumpToSource": [],
   // HTTP Client / Database console: run the request or statement at the caret.
