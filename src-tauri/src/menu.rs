@@ -442,6 +442,7 @@ pub fn spec(os: Os) -> Vec<Entry> {
             act("code.quickDocumentation", "Quick Documentation"),
             act("code.expressionTypeInfo", "Expression Type Info"),
             act("code.showErrorDescription", "Error Description"),
+            act("editor.contextInfo", "Context Info"),
             act("code.showIntentions", "Show Context Actions"),
             act("code.generate", "Generate…"),
             act("code.overrideMethods", "Override Methods…"),

@@ -28,6 +28,7 @@ export const vscodeMacos: Record<string, string[]> = {
   "navigate.callHierarchy": ["Alt+Shift+H"],
   "navigate.showFilePath": [],
   "navigate.customRegion": [],
+  "editor.contextInfo": [],
   // editor.action.wordHighlight.next / prev
   "navigate.nextHighlightedUsage": ["F7"],
   "navigate.prevHighlightedUsage": ["Shift+F7"],

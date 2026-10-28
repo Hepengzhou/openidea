@@ -431,6 +431,7 @@
   "menu.code.expandAllToLevel4": "4",
   "menu.code.expandToLevel5": "5",
   "menu.code.expandAllToLevel5": "5",
+  "menu.editor.contextInfo": "Context Info",
   "run.services.configurationCount": "{count} configurations",
   "search.bookmarks.count": "{count, plural, one {# bookmark} other {# bookmarks}}",
   "settings.zoom.hint": "Change with {zoomIn} or {zoomOut}. Set to 100% with {reset}"

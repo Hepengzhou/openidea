@@ -4605,5 +4605,7 @@
   "Copies the change at the caret from the left side to the right one": "将光标处的变更从左侧复制到右侧",
   "Copies the change at the caret from the right side to the left one": "将光标处的变更从右侧复制到左侧",
   "Compare Next File": "比较下一个文件",
-  "Compare Previous File": "比较上一个文件"
+  "Compare Previous File": "比较上一个文件",
+  "Context Info": "上下文信息",
+  "No context information here": "此处没有上下文信息"
 }

@@ -123,6 +123,7 @@ export const intellijMacos: Record<string, string[]> = {
   "editor.codeBlockEnd": ["Meta+Alt+]"],
   "editor.codeBlockStartWithSelection": ["Meta+Alt+Shift+["],
   "editor.codeBlockEndWithSelection": ["Meta+Alt+Shift+]"],
+  "editor.contextInfo": ["Ctrl+Shift+Q"],
   "navigate.customRegion": ["Meta+Alt+."],
   "code.expandToLevel1": ["Meta+* 1"],
   "code.expandToLevel2": ["Meta+* 2"],

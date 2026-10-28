@@ -431,6 +431,7 @@
   "menu.code.expandAllToLevel4": "4",
   "menu.code.expandToLevel5": "5",
   "menu.code.expandAllToLevel5": "5",
+  "menu.editor.contextInfo": "上下文信息",
   "run.services.configurationCount": "{count} 个配置",
   "search.bookmarks.count": "{count} 个书签",
   "settings.zoom.hint": "使用 {zoomIn} 或 {zoomOut} 更改，使用 {reset} 重置为 100%"

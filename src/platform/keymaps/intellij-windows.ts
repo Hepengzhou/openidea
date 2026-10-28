@@ -124,6 +124,7 @@ export const intellijWindows: Record<string, string[]> = {
   "editor.codeBlockEnd": ["Ctrl+]"],
   "editor.codeBlockStartWithSelection": ["Ctrl+Shift+["],
   "editor.codeBlockEndWithSelection": ["Ctrl+Shift+]"],
+  "editor.contextInfo": ["Alt+Q"],
   "navigate.customRegion": ["Ctrl+Alt+."],
   "code.expandToLevel1": ["Ctrl+* 1"],
   "code.expandToLevel2": ["Ctrl+* 2"],
