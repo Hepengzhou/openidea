@@ -74,6 +74,12 @@ function pausedTarget(): { s: DebugSession; thread: number } | null {
   return thread == null ? null : { s, thread };
 }
 
+/** Run to Cursor at `line` (0-based) of `path` in the paused session. */
+export function runToLine(path: string, line: number) {
+  const t = pausedTarget();
+  if (t) void report("Run to Cursor failed", call(commands.debugRunTo(t.s.id, t.thread, path, line, false)));
+}
+
 function notSupported(what: string, s: DebugSession) {
   notifications().notify({
     group: "run",

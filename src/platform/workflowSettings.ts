@@ -81,6 +81,7 @@ export interface DebuggerSettingsValid {
   focusAppOnBreakpoint: boolean;
   hideOnTermination: boolean;
   breakpointsAnyFile: boolean;
+  runToCursorInlay: boolean;
   inlineValues: boolean;
   valueTooltip: boolean;
   valueTooltipDelay: number;
@@ -239,6 +240,7 @@ export const DEFAULT_WORKFLOW: WorkflowSettings = {
     focusAppOnBreakpoint: false,
     hideOnTermination: false,
     breakpointsAnyFile: false,
+    runToCursorInlay: true,
     inlineValues: true,
     valueTooltip: true,
     valueTooltipDelay: 700,
@@ -372,6 +374,7 @@ export function validateDebugger(raw: unknown): DebuggerSettingsValid {
     focusAppOnBreakpoint: bool(v.focusAppOnBreakpoint, d.focusAppOnBreakpoint),
     hideOnTermination: bool(v.hideOnTermination, d.hideOnTermination),
     breakpointsAnyFile: bool(v.breakpointsAnyFile, d.breakpointsAnyFile),
+    runToCursorInlay: bool(v.runToCursorInlay, d.runToCursorInlay),
     inlineValues: bool(v.inlineValues, d.inlineValues),
     valueTooltip: bool(v.valueTooltip, d.valueTooltip),
     valueTooltipDelay: num(v.valueTooltipDelay, d.valueTooltipDelay, WORKFLOW_LIMITS.tooltipDelay, true),
