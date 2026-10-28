@@ -65,6 +65,23 @@ describe("EditorController", () => {
     expect(openFilePaths(useTabs.getState())).toEqual(["/p/a.ts", "/p/b.ts"]);
   });
 
+  it("opens a copy of a tab in the opposite group, splitting when there is none", async () => {
+    ctrl = new EditorController(createMemoryBackend({ "/p/a.ts": "", "/p/b.ts": "" }));
+    ctrl.start();
+    await ctrl.openFile("/p/a.ts", { focus: false });
+    await ctrl.openFile("/p/b.ts", { focus: false });
+    const paths = (paneId: string) => useTabs.getState().panes[paneId]!.tabs.map((t) => t.input.path);
+    const first = useTabs.getState().activePane;
+    const tabA = useTabs.getState().panes[first]!.tabs[0]!.id;
+    ctrl.openInOpposite(first, tabA);
+    const second = useTabs.getState().activePane;
+    expect(second).not.toBe(first);
+    expect(paths(second)).toEqual(["/p/a.ts"]);
+    ctrl.openInOpposite(first, useTabs.getState().panes[first]!.tabs[1]!.id);
+    expect(paths(second)).toEqual(["/p/a.ts", "/p/b.ts"]);
+    expect(paths(first)).toEqual(["/p/a.ts", "/p/b.ts"]);
+  });
+
   it("reopens the LightEdit files the next time a window switches to LightEdit", async () => {
     ctrl = new EditorController(createMemoryBackend({ "/x/a.txt": "a", "/y/b.md": "b" }));
     ctrl.start();

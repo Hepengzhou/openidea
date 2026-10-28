@@ -905,6 +905,30 @@ export function registerEditorActions(): () => void {
       run: () => ctrl.unsplit(useTabs.getState().activePane),
     },
     {
+      id: "editor.unsplitAll",
+      title: "Unsplit All",
+      category: "Window",
+      when: "editorSplit",
+      run: () => ctrl.unsplitAll(useTabs.getState().activePane),
+    },
+    {
+      id: "editor.changeSplitOrientation",
+      title: "Change Splitter Orientation",
+      category: "Window",
+      when: "editorSplit",
+      run: () => ctrl.changeSplitOrientation(useTabs.getState().activePane),
+    },
+    {
+      id: "editor.openInOppositeGroup",
+      title: "Open in Opposite Group",
+      category: "Window",
+      when: TABS_WHEN,
+      run: () => {
+        const t = activePaneTab();
+        if (t) ctrl.openInOpposite(t.paneId, t.tabId);
+      },
+    },
+    {
       id: "editor.copyPath",
       title: "Copy Path",
       category: "Edit",

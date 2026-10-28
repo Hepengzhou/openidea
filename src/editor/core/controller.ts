@@ -31,6 +31,7 @@ import { fileIconName, showContextMenu, type MenuItem } from "@/ui";
 import { usePlatform } from "@/platform/platformInfo";
 import {
   activateTab,
+  changeSplitOrientation,
   closeAll,
   closeKey,
   closeOthers,
@@ -57,6 +58,7 @@ import {
   splitPane,
   tabOptions,
   togglePin,
+  unsplitAll,
   type SplitEdge,
   type Tab,
   type TabsState,
@@ -1009,6 +1011,30 @@ export class EditorController implements SlotHost {
   unsplit(paneId: string) {
     this.apply((s) => removePane(s, paneId));
   }
+  unsplitAll(paneId: string) {
+    this.apply((s) => unsplitAll(s, paneId));
+    this.focus();
+  }
+  changeSplitOrientation(paneId: string) {
+    this.apply((s) => changeSplitOrientation(s, paneId));
+  }
+  /** IDEA "Open in Opposite Group": the tab stays and a copy opens next door (or in a new split). */
+  openInOpposite(paneId: string, tabId: string) {
+    const s = useTabs.getState();
+    const tab = s.panes[paneId]?.tabs.find((t) => t.id === tabId);
+    if (!tab) return;
+    const target = neighbourPane(s, paneId);
+    if (!target) {
+      this.activate(paneId, tabId, false);
+      return this.split(paneId, "row");
+    }
+    const r = openTab(s, target, tab.input);
+    useTabs.setState(r.state, true);
+    void this.ensureSlot(r.tabId, { from: this.slots.get(tabId) }).then((slot) => {
+      if (slot?.view) slot.focus();
+      else if (slot) slot.wantsFocus = true;
+    });
+  }
 
   closeActiveTab() {
     const s = useTabs.getState();
@@ -1183,7 +1209,10 @@ export class EditorController implements SlotHost {
       ...(split
         ? ([
             { label: "Move to Opposite Group", run: () => this.moveToOpposite(paneId, tab.id) },
+            { label: "Open in Opposite Group", run: () => this.openInOpposite(paneId, tab.id) },
+            { label: "Change Splitter Orientation", run: () => this.changeSplitOrientation(paneId) },
             { label: "Unsplit", run: () => this.unsplit(paneId) },
+            { label: "Unsplit All", run: () => this.unsplitAll(paneId) },
           ] as MenuItem[])
         : []),
       { kind: "separator" },
