@@ -8,6 +8,37 @@
 import { EditorView } from "@codemirror/view";
 import { BRACKET_COLORS } from "./rainbowBrackets";
 
+/** The caret and Settings › Editor › General › Appearance caret options (`caretExtension`), also for viewers. */
+export const caretStyles = {
+  ".cm-cursor, .cm-dropCursor": {
+    borderLeft: "2px solid var(--caret, var(--fg-strong))",
+    marginLeft: "-1px",
+  },
+  // Use block caret (Settings › Editor › General › Appearance)
+  "&.cm-openidea-blockCaret .cm-cursor": {
+    borderLeft: "none",
+    width: "1ch",
+    marginLeft: "0",
+    background: "color-mix(in srgb, var(--caret, var(--fg-strong)) 55%, transparent)",
+  },
+  // Use smooth caret blinking: fade through CodeMirror's blink keyframes instead of stepping; rounded caret.
+  "&.cm-openidea-smoothCaretBlink.cm-focused > .cm-scroller > .cm-cursorLayer": {
+    animationTimingFunction: "cubic-bezier(0.7, 0, 0.3, 1)",
+  },
+  "&.cm-openidea-smoothCaretBlink .cm-cursor": { borderRadius: "1px" },
+  "&.cm-openidea-smoothCaretBlink.cm-openidea-blockCaret .cm-cursor": { borderRadius: "2px" },
+  // Use smooth caret movement: Snappy lands at once and settles, Gliding travels visibly.
+  "&.cm-openidea-caretMotion-snappy": { "--openidea-caret-motion": "110ms cubic-bezier(0.16, 1, 0.3, 1)" },
+  "&.cm-openidea-caretMotion-gliding": { "--openidea-caret-motion": "180ms cubic-bezier(0.45, 0, 0.25, 1)" },
+  ".cm-cursorLayer.cm-openidea-caretGlide > .cm-cursor": {
+    transition:
+      "left var(--openidea-caret-motion), top var(--openidea-caret-motion), width var(--openidea-caret-motion), height var(--openidea-caret-motion)",
+  },
+  "@media (prefers-reduced-motion: reduce)": {
+    ".cm-cursorLayer.cm-openidea-caretGlide > .cm-cursor": { transition: "none" },
+  },
+};
+
 export const openideaTheme = EditorView.theme({
   "&": {
     height: "100%",
@@ -42,17 +73,7 @@ export const openideaTheme = EditorView.theme({
     caretColor: "var(--caret, var(--fg-strong))",
   },
   ".cm-line": { padding: "0 16px 0 6px" },
-  ".cm-cursor, .cm-dropCursor": {
-    borderLeft: "2px solid var(--caret, var(--fg-strong))",
-    marginLeft: "-1px",
-  },
-  // Use block caret (Settings › Editor › General › Appearance)
-  "&.cm-openidea-blockCaret .cm-cursor": {
-    borderLeft: "none",
-    width: "1ch",
-    marginLeft: "0",
-    background: "color-mix(in srgb, var(--caret, var(--fg-strong)) 55%, transparent)",
-  },
+  ...caretStyles,
   "&.cm-openidea-ligatures .cm-scroller, &.cm-openidea-ligatures .cm-openidea-sticky": {
     fontVariantLigatures: "normal",
   },
