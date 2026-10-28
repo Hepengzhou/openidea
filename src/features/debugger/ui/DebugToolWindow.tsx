@@ -40,6 +40,8 @@ import {
 } from "../state";
 import { VariablesView, type VarRoot } from "./VariablesView";
 import { pushHistory, readHistory, setConsoleHistoryBrowser } from "./expressionHistory";
+import { sortVariables } from "../values";
+import { workflowSettings } from "@/platform/workflowSettings";
 import styles from "./DebugToolWindow.module.css";
 import { tx } from "@/platform/i18n";
 
@@ -389,7 +391,10 @@ function VariablesPane({ session }: { session: DebugSession }) {
       try {
         scopes = await call(commands.debugScopes(session.id, frame));
         const first = scopes.find((s) => !s.expensive);
-        if (first) locals = await call(commands.debugVariables(session.id, first.variablesReference));
+        if (first) {
+          const vars = await call(commands.debugVariables(session.id, first.variablesReference));
+          locals = workflowSettings().debugger.sortValues ? sortVariables(vars) : vars;
+        }
       } catch {
         // Frame went away (resumed).
       }
