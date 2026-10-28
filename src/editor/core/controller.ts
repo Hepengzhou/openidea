@@ -915,6 +915,10 @@ export class EditorController implements SlotHost {
     };
     this.apply((s) => closeUnmodified(s, paneId, modified));
   }
+  closeReadOnly(paneId: string) {
+    const writable = (t: Tab) => !t.input.path || !useDocMeta.getState()[t.input.path]?.readOnly;
+    this.apply((s) => closeUnmodified(s, paneId, writable));
+  }
   /** Reload from Disk: re-reads the open, unmodified documents of `paths`. */
   async reloadFromDisk(paths: string[]) {
     for (const path of paths) {
@@ -1189,8 +1193,12 @@ export class EditorController implements SlotHost {
       ...(tabs.some((t) => t.pinned)
         ? ([{ label: "Close All but Pinned", run: () => this.closeAll(paneId, true) }] as MenuItem[])
         : []),
+      ...(tabs.some((t) => !t.pinned && !!t.input.path && useDocMeta.getState()[t.input.path]?.readOnly)
+        ? ([{ label: "Close All Read-Only Tabs", run: () => this.closeReadOnly(paneId) }] as MenuItem[])
+        : []),
       { kind: "separator" },
       { label: tab.pinned ? "Unpin Tab" : "Pin Tab", icon: "pin", run: () => this.togglePin(paneId, tab.id) },
+      ...(tab.preview ? ([{ label: "Keep Tab Open", run: () => this.keepTab(paneId, tab.id) }] as MenuItem[]) : []),
       { kind: "separator" },
       { label: "Split and Move Right", run: () => this.moveTabToSplit(paneId, tab.id, paneId, "right") },
       { label: "Split and Move Down", run: () => this.moveTabToSplit(paneId, tab.id, paneId, "bottom") },

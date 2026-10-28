@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { EditorController, openFilePaths, useEditorStatus, useTabs } from "./controller";
 import { createMemoryBackend } from "./backend";
 import { initialTabsState } from "./model/tabs";
+import { useDocMeta } from "./model/document";
 import { resetDistractionFree, setDistractionFree } from "@/workbench/distractionFree";
 import { registerActions } from "@/platform/actions";
 import { useProject } from "@/platform/project";
@@ -80,6 +81,24 @@ describe("EditorController", () => {
     ctrl.openInOpposite(first, useTabs.getState().panes[first]!.tabs[1]!.id);
     expect(paths(second)).toEqual(["/p/a.ts", "/p/b.ts"]);
     expect(paths(first)).toEqual(["/p/a.ts", "/p/b.ts"]);
+  });
+
+  it("closes read-only tabs and keeps a preview tab open from the tab menu", async () => {
+    ctrl = new EditorController(createMemoryBackend({ "/p/a.ts": "", "/p/b.ts": "", "/p/c.ts": "" }));
+    ctrl.start();
+    await ctrl.openFile("/p/a.ts", { focus: false });
+    await ctrl.openFile("/p/b.ts", { focus: false });
+    await ctrl.openFile("/p/c.ts", { focus: false, preview: true });
+    const pane = () => useTabs.getState().panes[useTabs.getState().activePane]!;
+    const labels = () => resolveMenuItems(ctrl!.tabMenu(pane().id, pane().tabs[2]!)).map((i) => i.label);
+    expect(labels()).toContain("Keep Tab Open");
+    expect(labels()).not.toContain("Close All Read-Only Tabs");
+    ctrl.keepTab(pane().id, pane().tabs[2]!.id);
+    expect(pane().tabs[2]!.preview).toBe(false);
+    useDocMeta.setState({ "/p/b.ts": { ...useDocMeta.getState()["/p/b.ts"]!, readOnly: true } });
+    expect(labels()).toContain("Close All Read-Only Tabs");
+    ctrl.closeReadOnly(pane().id);
+    expect(pane().tabs.map((t) => t.input.path)).toEqual(["/p/a.ts", "/p/c.ts"]);
   });
 
   it("reopens the LightEdit files the next time a window switches to LightEdit", async () => {
