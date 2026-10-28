@@ -83,6 +83,7 @@ export interface DebuggerSettingsValid {
   breakpointsAnyFile: boolean;
   runToCursorInlay: boolean;
   inlineValues: boolean;
+  sortValues: boolean;
   valueTooltip: boolean;
   valueTooltipDelay: number;
   skipLibraryCode: boolean;
@@ -242,6 +243,7 @@ export const DEFAULT_WORKFLOW: WorkflowSettings = {
     breakpointsAnyFile: false,
     runToCursorInlay: true,
     inlineValues: true,
+    sortValues: false,
     valueTooltip: true,
     valueTooltipDelay: 700,
     skipLibraryCode: true,
@@ -376,6 +378,7 @@ export function validateDebugger(raw: unknown): DebuggerSettingsValid {
     breakpointsAnyFile: bool(v.breakpointsAnyFile, d.breakpointsAnyFile),
     runToCursorInlay: bool(v.runToCursorInlay, d.runToCursorInlay),
     inlineValues: bool(v.inlineValues, d.inlineValues),
+    sortValues: bool(v.sortValues, d.sortValues),
     valueTooltip: bool(v.valueTooltip, d.valueTooltip),
     valueTooltipDelay: num(v.valueTooltipDelay, d.valueTooltipDelay, WORKFLOW_LIMITS.tooltipDelay, true),
     skipLibraryCode: bool(v.skipLibraryCode, d.skipLibraryCode),

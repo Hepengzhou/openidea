@@ -173,6 +173,7 @@ export const EXECUTION_PAGES: PageSpec[] = [
             label: "Show values inline",
             hint: "Values of local variables are shown after the lines that use them while suspended.",
           },
+          { kind: "toggle", key: "debugger.sortValues", label: "Sort values alphabetically" },
           {
             kind: "toggle",
             key: "debugger.valueTooltip",
