@@ -2244,6 +2244,8 @@ export type DebuggerSettings = {
 	/**  Data Views: list variables by name instead of the adapter's order. */
 	sortValues?: boolean,
 	valueTooltip?: boolean,
+	/**  While suspended, selecting an expression shows its value. */
+	valueTooltipOnSelection?: boolean,
 	valueTooltipDelay?: number,
 	/**  Stepping: do not step into library code (debugpy `justMyCode`, js-debug `skipFiles`). */
 	skipLibraryCode?: boolean,
