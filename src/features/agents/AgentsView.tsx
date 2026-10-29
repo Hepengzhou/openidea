@@ -8,7 +8,7 @@ import { EmptyState, Icon, IconButton, Spinner, T, Tree, showContextMenu, type M
 import { SESSION_KIND, age, branchLabel, groupTasks, isBusy, type TaskGroup } from "./model";
 import { archiveTask, deleteTask, openHome, openTask, useAgents } from "./store";
 import styles from "./Agents.module.css";
-import { tx } from "@/platform/i18n";
+import { tx, useTx } from "@/platform/i18n";
 
 export function AgentsHeaderActions() {
   return (
@@ -44,9 +44,11 @@ export function TaskStatusIcon({ status }: { status: Status }) {
 }
 
 export function AgentsView() {
+  const tx = useTx();
   const loaded = useAgents((s) => s.loaded);
   const error = useAgents((s) => s.error);
   const tasks = useAgents((s) => s.tasks);
+  const unread = useAgents((s) => s.unread);
   const providers = useAgents((s) => s.providers);
   const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set(["g:archived"]));
   const [selected, setSelected] = useState<Set<string>>(() => {
@@ -115,7 +117,12 @@ export function AgentsView() {
           ) : (
             <span className={styles.row} title={n.task.error ?? n.task.title}>
               <TaskStatusIcon status={n.task.status} />
-              <span className={styles.title}>{n.task.title}</span>
+              <span className={styles.title} data-unread={unread.has(n.task.id) || undefined}>
+                {n.task.title}
+              </span>
+              {unread.has(n.task.id) && (
+                <span className={styles.unreadDot} role="img" aria-label={tx("Unread")} title={tx("Unread")} />
+              )}
               <span className={styles.detail}>
                 {providerName(n.task.provider)}
                 {n.task.isolation === "worktree" ? ` · ${branchLabel(n.task.branch)}` : ""}
