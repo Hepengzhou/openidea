@@ -8,6 +8,7 @@ import {
   EditorState,
   RangeSet,
   RangeSetBuilder,
+  StateEffect,
   StateField,
   type Extension,
   type Line,
@@ -30,6 +31,7 @@ import { search, searchKeymap } from "@codemirror/search";
 import { tags as t } from "@lezer/highlight";
 import { findExtension } from "@/editor/core/cm/find";
 import { caretExtension } from "@/editor/core/cm/prefs";
+import { fontExtension } from "@/editor/core/cm/setup";
 import { caretStyles, findLocals, findStyles } from "@/editor/core/cm/theme";
 import { editorPrefs } from "@/platform/editorSettings";
 import { useProject } from "@/platform/project";
@@ -145,10 +147,16 @@ export const viewerTheme = EditorView.theme(
       height: "100%",
       backgroundColor: "var(--bg-app)",
       color: "var(--fg)",
-      fontSize: "var(--fs-code)",
+      fontSize: "var(--openidea-editor-font-size, var(--fs-code))",
       ...findLocals,
     },
-    ".cm-scroller": { fontFamily: "var(--font-mono)", fontWeight: "var(--fw-code, 400)", lineHeight: "var(--lh-code)" },
+    ".cm-scroller": {
+      fontFamily: "var(--openidea-editor-font, var(--font-mono))",
+      fontWeight: "var(--fw-code, 400)",
+      lineHeight: "var(--openidea-editor-line-height, var(--lh-code))",
+      fontVariantLigatures: "none",
+    },
+    "&.cm-openidea-ligatures .cm-scroller": { fontVariantLigatures: "normal" },
     ".cm-content": { caretColor: "var(--caret, var(--fg-strong))", WebkitUserSelect: "text", userSelect: "text" },
     ...caretStyles,
     "&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, ::selection": {
@@ -231,18 +239,33 @@ export const viewerTheme = EditorView.theme(
 );
 
 const caretSlot = new Compartment();
+const fontSlot = new Compartment();
 
-/** The editor's caret (Settings › Editor › General › Appearance), kept in step with the settings. */
-function viewerCaret(): Extension {
+const editorSettings = () => useProject.getState().settings?.editor;
+
+/**
+ * The editor's caret (Settings › Editor › General › Appearance) and font
+ * (Settings › Editor › Font), kept in step with the settings.
+ */
+function viewerEditorLook(): Extension {
   return [
     caretSlot.of(caretExtension(editorPrefs())),
+    fontSlot.of(fontExtension(editorSettings())),
     ViewPlugin.define((view) => {
       let appearance = editorPrefs().appearance;
+      let editor = editorSettings();
       const unsubscribe = useProject.subscribe(() => {
+        const effects: StateEffect<unknown>[] = [];
         const next = editorPrefs();
-        if (JSON.stringify(next.appearance) === JSON.stringify(appearance)) return;
-        appearance = next.appearance;
-        view.dispatch({ effects: caretSlot.reconfigure(caretExtension(next)) });
+        if (JSON.stringify(next.appearance) !== JSON.stringify(appearance)) {
+          appearance = next.appearance;
+          effects.push(caretSlot.reconfigure(caretExtension(next)));
+        }
+        if (editorSettings() !== editor) {
+          editor = editorSettings();
+          effects.push(fontSlot.reconfigure(fontExtension(editor)));
+        }
+        if (effects.length) view.dispatch({ effects });
       });
       return { destroy: unsubscribe };
     }),
@@ -256,7 +279,7 @@ function viewerCaret(): Extension {
 export function viewerBase(opts: { readOnly: boolean; lineNumbers?: boolean; findBar?: boolean }): Extension[] {
   return [
     opts.lineNumbers === false ? [] : lineNumbers(),
-    viewerCaret(),
+    viewerEditorLook(),
     highlightActiveLine(),
     opts.findBar
       ? [findExtension(), keymap.of(defaultKeymap)]
