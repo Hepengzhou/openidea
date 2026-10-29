@@ -86,7 +86,6 @@ export function useStashTabCounts(available: boolean) {
       void Promise.all(roots.map((r) => call(commands.vcsStashes(r))))
         .then((lists) => live && setStashCount(lists.reduce((n, list) => n + list.length, 0)))
         .catch(() => undefined);
-    else setStashCount(0);
     return () => {
       live = false;
     };
@@ -95,7 +94,7 @@ export function useStashTabCounts(available: boolean) {
   useEffect(() => {
     if (available) void loadShelves().catch(() => undefined);
   }, [available]);
-  return { stashCount, shelfCount };
+  return { stashCount: available ? stashCount : 0, shelfCount };
 }
 
 /** "Commit" / "Shelf" / "Stash" content tabs; they stand in for the tool window title. */
@@ -842,36 +841,34 @@ export function StashesPanel() {
   const repo = useVcs((s) => s.repo);
   const repos = useVcs((s) => s.roots);
   const version = useVcs((s) => s.version);
-  const [stashes, setStashes] = useState<(import("@/bindings").Stash & { repo: string | null })[]>([]);
-  const [loaded, setLoaded] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [tick, setTick] = useState(0);
   const [active, setActive] = useState(0);
+  const request = useMemo(() => ({ repos, repo, version, tick }), [repos, repo, version, tick]);
+  const [result, setResult] = useState<{
+    request: typeof request;
+    stashes: (import("@/bindings").Stash & { repo: string | null })[];
+    error: string | null;
+  } | null>(null);
+  const loaded = result?.request === request;
+  const stashes = loaded ? result.stashes : [];
+  const error = loaded ? result.error : null;
   useEffect(() => {
     let live = true;
-    setLoaded(false);
     void Promise.all(
-      (repos.length ? repos : [repo]).map(async (root) =>
+      (request.repos.length ? request.repos : [request.repo]).map(async (root) =>
         (await call(commands.vcsStashes(root))).map((s) => ({ ...s, repo: root })),
       ),
     )
       .then((lists) => {
-        if (live) {
-          setStashes(lists.flat());
-          setError(null);
-          setLoaded(true);
-        }
+        if (live) setResult({ request, stashes: lists.flat(), error: null });
       })
       .catch((e) => {
-        if (live) {
-          setError(String(e));
-          setLoaded(true);
-        }
+        if (live) setResult({ request, stashes: [], error: String(e) });
       });
     return () => {
       live = false;
     };
-  }, [repos, repo, version, tick]);
+  }, [request]);
   const current = stashes[active];
   return (
     <div className={styles.changes}>
