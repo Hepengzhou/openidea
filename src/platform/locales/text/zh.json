@@ -1033,6 +1033,7 @@
   "Log filters": "日志筛选器",
   "Long tasks": "长任务",
   "Looking for references…": "正在查找引用…",
+  "Finding navigation target…": "正在查找跳转目标…",
   "Looks for TODO and FIXME in added lines.": "在新增的行中查找 TODO 和 FIXME。",
   "Macros": "宏",
   "Main Menu": "主菜单",
