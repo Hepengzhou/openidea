@@ -2039,7 +2039,9 @@ export type DbDatabases = {
 
 export type DbDriver = "sqlite" | "postgres" | 
 /**  MySQL and MariaDB. */
-"mysql";
+"mysql" | 
+/**  Microsoft SQL Server. */
+"sqlServer";
 
 /**  `schema.table (columns) REFERENCES ref_schema.ref_table (ref_columns)`. */
 export type DbForeignKey = {
