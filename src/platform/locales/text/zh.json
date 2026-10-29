@@ -1637,6 +1637,8 @@
   "Select a problem to see its details": "选择一个问题以查看详情",
   "Select an item to preview": "选择一项以预览",
   "Severity": "严重性",
+  "Selecting a changed file shows its diff in the editor's preview tab": "选中已更改的文件时，在编辑器的预览标签页中显示其差异",
+  "Show Diff Preview": "显示差异预览",
   "Show Quick Fixes": "显示快速修复",
   "Snappy": "迅捷",
   "Sort By": "排序依据",
