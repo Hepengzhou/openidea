@@ -20,6 +20,7 @@ pub mod remote_settings;
 pub mod settings;
 pub mod task;
 pub mod text;
+pub mod version_managers;
 pub mod workflow_settings;
 
 pub use error::{IdeError, IdeResult};
