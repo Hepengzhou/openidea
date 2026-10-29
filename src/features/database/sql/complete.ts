@@ -68,7 +68,10 @@ export function quoteIdent(name: string, driver: DbDriver): string {
 
 /** A short alias for `table` not in `taken`: `order_items` → `oi`, `users` → `u`. */
 export function aliasFor(table: string, taken: ReadonlySet<string>): string {
-  const words = table.replace(/([a-z])([A-Z])/g, "$1 $2").split(/[_\s.$-]+/).filter(Boolean);
+  const words = table
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .split(/[_\s.$-]+/)
+    .filter(Boolean);
   let base =
     words
       .map((w) => w[0]!)
