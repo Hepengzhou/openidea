@@ -3,6 +3,8 @@
   ", e.g.": "，例如",
   ", then press Tab.": "，然后按 Tab。",
   "? This cannot be undone.": "？此操作无法撤消。",
+  "API request failed, retrying (attempt {attempt})": "API 请求失败，正在重试（第 {attempt} 次）",
+  "API request failed, retrying in {wait}s (attempt {attempt})": "API 请求失败，{wait} 秒后重试（第 {attempt} 次）",
   "A charset in .editorconfig takes precedence. Change one file's encoding from the status bar.": ".editorconfig 中的 charset 优先。可以从状态栏更改单个文件的编码。",
   "A command line, e.g. /bin/zsh --login. Leave empty to use the login shell.": "命令行，例如 /bin/zsh --login。留空则使用登录 Shell。",
   "A line breakpoint that is removed after it is hit": "命中后即移除的行断点",
