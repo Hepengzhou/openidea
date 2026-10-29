@@ -415,7 +415,15 @@ export async function rerunFrom(task: string, turn: number, text: string): Promi
     await settled(task);
   }
   await call(commands.agentRollback(task, turn));
-  await call(commands.agentPrompt(task, { text, files: [], images: [] }, false));
+  try {
+    await call(commands.agentPrompt(task, { text, files: [], images: [] }, false));
+  } catch (e) {
+    // Rollback removes the inline editor; recover its text in the session composer.
+    const current = composerDraft(task);
+    updateComposer(task, { text: current.text ? `${text}\n${current.text}` : text });
+    focusComposer(task);
+    throw e;
+  }
 }
 
 /** Resolves once the task's turn has ended (or after a while). */
