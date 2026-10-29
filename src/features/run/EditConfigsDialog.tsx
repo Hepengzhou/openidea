@@ -32,8 +32,6 @@ import { blankTemplate, COMPOUND, missingParams, newConfigOfType, templateId, ty
 import styles from "./Run.module.css";
 import { tx } from "@/platform/i18n";
 
-export { envFromRows } from "./EnvDialog";
-
 export function EditConfigsOverlay() {
   const open = useRun((s) => s.editorOpen);
   if (!open) return null;
