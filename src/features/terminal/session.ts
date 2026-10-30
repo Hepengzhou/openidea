@@ -371,14 +371,6 @@ export class TerminalSession {
   }
 
   /**
-   * WebKitGTK + fcitx5 commit IME text without firing `compositionstart`, which breaks xterm's
-   * composition bookkeeping: `CompositionHelper` only advances `_compositionPosition.start`
-   * there, so it stays 0, the textarea value keeps growing, and every commit reaches the PTY
-   * twice (the shell-integration diff plus a stale `value.substring(start)`) — the text shows
-   * up duplicated. Accept only the first emission of a commit and rebase the textarea so the
-   * next commit starts from an empty buffer. IMEs that do fire `compositionstart` are left alone.
-   */
-  /**
    * Routes a WebKitGTK / fcitx5 IME commit through `ImeCommitGate`: the platform reports the
    * composition's own keystroke (code 229) and its input event but never `compositionstart`,
    * which is what xterm's own bookkeeping is built on.
