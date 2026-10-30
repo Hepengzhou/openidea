@@ -1,4 +1,7 @@
 {
+  "Downloading Java {0} language server runtime": "正在下载 Java {0} 语言服务器运行时",
+  "auto-managed; uses an installed JDK or downloads a runtime when needed": "自动管理；使用已安装的 JDK，或在需要时自动下载运行时",
+  "Runs jdtls only; the project keeps its Project JDK. When empty, a suitable installed JDK is used first, otherwise Eclipse Temurin is downloaded automatically into a separate language-server folder. The jdtls executable itself is set in Language Servers.": "仅用于运行 jdtls，项目仍使用项目 JDK。留空时优先使用符合要求的已安装 JDK，否则自动将 Eclipse Temurin 下载到独立的语言服务器目录。jdtls 可执行文件在语言服务器设置中配置。",
   "Semantic Highlighting": "语义高亮",
   "Rainbow Brackets": "彩虹括号",
   "Comment with Line Comment": "使用行注释",
@@ -1406,7 +1409,6 @@
   "Rerun Search": "重新运行搜索",
   "Right Bottom": "右下",
   "Right Top": "右上",
-  "Runs jdtls only, like IDEA's JDK for importer; the project keeps compiling and running with the Project JDK. jdtls needs JDK 21 or newer (recent releases 25); Download JDK… in the list fetches one. The jdtls executable itself is set in Language Servers.": "仅用于运行 jdtls（类似 IDEA 的「导入器 JDK」）；项目仍使用项目 JDK 编译和运行。jdtls 需要 JDK 21 或更高版本（较新版本需要 25）；可通过列表中的「下载 JDK…」获取。jdtls 可执行文件本身在「语言服务器」中设置。",
   "Language server JDK": "语言服务器 JDK",
   "Password": "密码",
   "Password:": "密码：",
@@ -2384,7 +2386,6 @@
   "not installed in this project": "此项目中未安装",
   "or click a line number to set a breakpoint.": "或点击行号设置断点。",
   "per module, the JDK of its Java version": "按模块使用与其 Java 版本匹配的 JDK",
-  "the project JDK if new enough, else the first installed JDK that is": "项目 JDK 版本足够时使用它，否则使用第一个版本足够的已安装 JDK",
   "pip output": "pip 输出",
   "places the caret. A line with": "放置光标。包含",
   "println! with Debug": "使用 Debug 的 println!",
