@@ -106,6 +106,18 @@ export function sessionDetail(s: RunSession | undefined): string | undefined {
 }
 
 /**
+ * Node labels of one type: configurations naming the same class (a `main` class of
+ * the same name in several modules) carry their module directory.
+ */
+export function configLabels(entries: readonly RunConfig[]): Map<string, string> {
+  const count = new Map<string, number>();
+  for (const c of entries) count.set(c.name, (count.get(c.name) ?? 0) + 1);
+  const labels = new Map<string, string>();
+  for (const c of entries) labels.set(c.id, (count.get(c.name) ?? 0) > 1 && c.cwd ? `${c.name} (${c.cwd})` : c.name);
+  return labels;
+}
+
+/**
  * Groups by configuration type: added types list all their configurations, other
  * types only those that ran. A default type (Spring Boot) without configurations is hidden.
  */
@@ -122,11 +134,12 @@ export function runServiceItems(
     for (const s of latest.values())
       if (s.config.kind === kind && !entries.some((c) => c.id === s.config.id)) entries.push(s.config);
     if (!entries.length && DEFAULT_TYPES.includes(kind)) return [];
+    const labels = configLabels(entries);
     const children = entries.map((c): ServiceTreeItem => {
       const s = latest.get(c.id);
       return {
         key: CONFIG_PREFIX + c.id,
-        label: c.name,
+        label: labels.get(c.id) ?? c.name,
         icon: s && busy(s) ? "run" : configIcon(c),
         detail: sessionDetail(s),
         dim: !s || !busy(s),
