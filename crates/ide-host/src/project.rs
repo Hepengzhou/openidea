@@ -993,8 +993,10 @@ mod maven_linkage_tests {
         ide_sdk::apply::configure_maven_import(&mut server, tmp.path(), &excluded_poms);
         let options = serde_json::to_value(server.initialization_options).unwrap();
         let exclusions = options.pointer("/settings/java/import/exclusions").unwrap().as_array().unwrap();
-        assert!(exclusions.contains(&serde_json::json!(tmp.path().join("a").to_string_lossy())));
-        assert!(exclusions.contains(&serde_json::json!(tmp.path().join("a/child").to_string_lossy())));
+        assert!(exclusions.contains(&serde_json::json!(tmp.path().join("a").to_string_lossy().replace('\\', "/"))));
+        assert!(
+            exclusions.contains(&serde_json::json!(tmp.path().join("a/child").to_string_lossy().replace('\\', "/")))
+        );
         let roots = super::linked_roots(tmp.path(), &settings, &detected);
         assert!(roots.roots.iter().any(|r| r.path == "b/src/main/java"));
         assert!(!roots.roots.iter().any(|r| r.path.starts_with("a/")));

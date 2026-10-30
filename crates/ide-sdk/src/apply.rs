@@ -735,8 +735,8 @@ mod maven_linkage_tests {
         let options = serde_json::to_value(cfg.initialization_options).unwrap();
         let exclusions = options.pointer("/settings/java/import/exclusions").unwrap().as_array().unwrap();
         assert!(exclusions.contains(&json!("**/custom")));
-        assert!(exclusions.contains(&json!(tmp.path().join("a").to_string_lossy())));
-        assert!(exclusions.contains(&json!(tmp.path().join("a/child").to_string_lossy())));
+        assert!(exclusions.contains(&json!(tmp.path().join("a").to_string_lossy().replace('\\', "/"))));
+        assert!(exclusions.contains(&json!(tmp.path().join("a/child").to_string_lossy().replace('\\', "/"))));
         assert!(cfg.args[1].starts_with("/cache/jdtls-maven-"));
     }
 }
